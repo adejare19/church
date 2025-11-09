@@ -1,0 +1,363 @@
+ <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Digital Sanctuary</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Montserrat:wght@400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="church.css">
+</head>
+
+<body class="bg-gray-50 text-gray-800">
+
+    
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-4 lg:px-8 py-4 flex justify-between items-center">
+            <a href="#home" class="nav-link-logo text-2xl font-bold text-gray-800">
+                <img src="mft.png" height="65px" width="70px">
+            </a>
+
+           
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="#home" class="nav-link text-gray-600 hover:text-amber-600 transition">Home</a>
+                <a href="#sermons" class="nav-link text-gray-600 hover:text-amber-600 transition">Sermons</a>
+                <a href="#booklets" class="nav-link text-gray-600 hover:text-amber-600 transition">Booklets</a>
+                <a href="#contact" class="nav-link text-gray-600 hover:text-amber-600 transition">Contact</a>
+                <div class="pl-4"> 
+                    <button id="upload-main-btn"
+                        class="bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 transition shadow hidden">
+                        Upload Content
+                    </button>
+                    <button id="logout-btn"
+                        class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition shadow hidden">
+                        Logout
+                    </button>
+                </div>
+            </div>
+
+           
+            <div class="md:hidden">
+                <button id="mobile-menu-btn"
+                    class="p-2 rounded-md text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-amber-500">
+                    <svg class="w-6 h-6" id="menu-open-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                    <svg class="w-6 h-6 hidden" id="menu-close-icon" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+        </nav>
+
+        
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="#home"
+                    class="nav-link-mobile block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-white hover:bg-amber-600">Home</a>
+                <a href="#sermons"
+                    class="nav-link-mobile block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-white hover:bg-amber-600">Sermons</a>
+                <a href="#booklets"
+                    class="nav-link-mobile block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-white hover:bg-amber-600">Booklets</a>
+                <a href="#contact"
+                    class="nav-link-mobile block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-white hover:bg-amber-600">Contact</a>
+
+            </div>
+            <div class="pt-4 pb-3 border-t border-gray-200">
+                <div class="px-5 space-y-2">
+                    <button id="upload-main-btn-mobile"
+                        class="w-full bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 transition shadow hidden">
+                        Upload Content
+                    </button>
+                    <button id="logout-btn-mobile"
+                        class="w-full bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition shadow hidden">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    
+    <main id="home" class="page container mx-auto p-4 lg:p-8">
+        <section class="text-center my-12">
+            <h2 class="text-4xl font-bold mb-2">Welcome to Our Digital Home</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">Stay connected with our church family. Access sermons, view
+                upcoming events, and find resources to support your spiritual journey.</p>
+        </section>
+        <!-- Welcome Section -->
+<section id="welcome" class="relative py-16 bg-white">
+  <div class="container mx-auto px-4 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+    
+    <!-- Left: Image with decorative frames -->
+    <div class="relative">
+      <div class="absolute -top-6 -left-6 w-24 h-24 bg-amber-500 opacity-80"></div>
+      <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-amber-500 opacity-80"></div>
+      <img src="pas.jpeg" alt="Pastor Image" class="relative z-10 rounded-lg shadow-lg" />
+    </div>
+
+    <!-- Right: Text -->
+    <div>
+      <p class="text-amber-600 font-medium mb-2">Who we are</p>
+      <h2 class="text-4xl lg:text-5xl font-bold leading-tight mb-4 text-gray-900">
+        Welcome to <span class="text-amber-600">MFM IFESOWAPO</span>
+      </h2>
+      <p class="text-gray-600 mb-4">
+        This is <strong>God’s Sanctuary</strong>, <strong>Your Sanctuary</strong>, and <strong>Our Sanctuary</strong>.
+      </p>
+      <p class="text-gray-600 mb-4">
+        We are a City set on a Hill that cannot be hidden — a digital refuge where inspiration meets faith and creativity. 
+      </p>
+      <p class="text-gray-600 mb-6">
+        Here, we build a global community of believers and creators empowered by the Spirit to spread light, wisdom, and purpose through digital expression.
+      </p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="flex items-start space-x-2">
+          <span class="text-amber-600 text-xl">✔</span>
+          <div>
+            <h4 class="font-semibold text-gray-900">Our Mandate</h4>
+            <p class="text-gray-600 text-sm">To enforce the Kingdom of God through media and technology.</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-2">
+          <span class="text-amber-600 text-xl">✔</span>
+          <div>
+            <h4 class="font-semibold text-gray-900">Our Vision</h4>
+            <p class="text-gray-600 text-sm">To unite the body of Christ digitally across the nations.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+        <section id="recent-sermons" class="mb-16 mt-4">
+            <h3 class="text-3xl font-bold border-l-4 border-amber-600 pl-4 mb-8">Recent Sermons</h3>
+            <div id="recent-sermons-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+               
+            </div>
+            <div class="text-center mt-8">
+                <a href="#sermons"
+                    class="bg-amber-600 text-white px-6 py-3 rounded-lg hover:bg-amber-700 transition shadow-md">View
+                    All Sermons</a>
+            </div>
+        </section>
+
+        <section id="flyers" class="mb-16">
+            <h3 class="text-3xl font-bold border-l-4 border-amber-600 pl-4 mb-8">Upcoming Events</h3>
+            <div id="flyers-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+            </div>
+        </section>
+
+        <section id="activities" class="mb-16">
+            <h3 class="text-3xl font-bold border-l-4 border-amber-600 pl-4 mb-8">Church Activities</h3>
+            <div id="activities-list" class="bg-white rounded-lg shadow-lg p-6">
+                
+            </div>
+        </section>
+    </main>
+
+    
+    <main id="sermons" class="page container mx-auto p-4 lg:p-8 hidden">
+        <section class="mb-16">
+            <h3 class="text-3xl font-bold border-l-4 border-amber-600 pl-4 mb-8">Sermon Archives</h3>
+            <div id="sermons-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+               
+            </div>
+        </section>
+    </main>
+
+  
+    <main id="booklets" class="page container mx-auto p-4 lg:p-8 hidden">
+        <section class="mb-16">
+            <h3 class="text-3xl font-bold border-l-4 border-amber-600 pl-4 mb-8">Prayer Booklets Library</h3>
+            <div id="booklets-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+            </div>
+        </section>
+    </main>
+
+    
+    <main id="sermon-player" class="page container mx-auto p-4 lg:p-8 hidden">
+        <section class="max-w-4xl mx-auto">
+            <a href="#sermons" class="text-amber-600 hover:text-amber-800 font-semibold mb-8 inline-block">&larr; Back
+                to Sermon Archives</a>
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        
+                <div id="media-player-container" class="w-full bg-black aspect-video flex items-center justify-center">
+                    <p class="text-white">Sermon media will be loaded here.</p>
+                </div>
+                <div class="p-6">
+                    <p id="player-date" class="text-sm text-gray-500 mb-1">Date</p>
+                    <h3 id="player-title" class="text-3xl font-bold mb-4">Sermon Title</h3>
+                    <p id="player-description" class="text-gray-600">Sermon description.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+
+
+
+    
+    <footer class="bg-gray-800 text-white text-center p-4 fixed bottom-0 left-0 w-full">
+        <p>&copy; 2025 MFM Ifesowapo Regional HeadQuarters. All Rights Reserved.</p>
+        <a href="#" id="admin-login-link" class="text-sm text-gray-400 hover:text-amber-500">Admin Login</a>
+    </footer>
+
+
+    
+    <div id="admin-login-modal"
+        class="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden">
+        <div class="modal-content bg-white w-full max-w-sm p-8 rounded-lg shadow-xl transform scale-95">
+            <h3 class="text-2xl font-bold mb-6">Admin Login</h3>
+            <form id="admin-login-form">
+                <div class="mb-4">
+                    <label for="admin-password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                    <input type="password" id="admin-password" name="admin-password" required
+                        class="w-full p-2 border border-gray-300 rounded-md">
+                    <p id="login-error" class="text-red-500 text-sm mt-1 hidden">Incorrect password.</p>
+                </div>
+                <div class="flex justify-end space-x-4">
+                    <button type="button" id="cancel-login-btn"
+                        class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition">Cancel</button>
+                    <button type="submit"
+                        class="bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 transition">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+   
+    <div id="upload-modal"
+        class="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden">
+        <div class="modal-content bg-white w-full max-w-md p-8 rounded-lg shadow-xl transform scale-95">
+            <h3 id="modal-title" class="text-2xl font-bold mb-6">Upload New Content</h3>
+            <form id="upload-form">
+                <div class="mb-4">
+                    <label for="content-type" class="block text-sm font-medium text-gray-700 mb-1">Content Type</label>
+                    <select id="content-type" name="content-type" class="w-full p-2 border border-gray-300 rounded-md">
+                        <option value="sermon">Sermon</option>
+                        <option value="flyer">Flyer</option>
+                        <option value="booklet">Prayer Booklet</option>
+                        <option value="activity">Activity</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="content-title" class="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                    <input type="text" id="content-title" name="content-title" required
+                        class="w-full p-2 border border-gray-300 rounded-md">
+                </div>
+                <div class="mb-4">
+                    <label for="content-description"
+                        class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                    <textarea id="content-description" name="content-description" rows="3" required
+                        class="w-full p-2 border border-gray-300 rounded-md"></textarea>
+                </div>
+                <div class="mb-6">
+                    <label for="content-file" class="block text-sm font-medium text-gray-700 mb-1">File/Image (for
+                        Sermons, Flyers, Booklets)</label>
+                    <input type="file" id="content-file" name="content-file"
+                        class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100">
+                </div>
+                <div class="flex justify-end space-x-4">
+                    <button type="button" id="cancel-upload-btn"
+                        class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition">Cancel</button>
+                    <button type="submit" id="submit-upload-btn"
+                        class="bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 transition">Upload</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal"
+        class="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden">
+        <div class="modal-content bg-white w-full max-w-sm p-8 rounded-lg shadow-xl transform scale-95">
+            <h3 class="text-xl font-bold mb-4">Are you sure?</h3>
+            <p id="confirm-message" class="text-gray-600 mb-6">This action cannot be undone.</p>
+            <div class="flex justify-end space-x-4">
+                <button id="cancel-confirm-btn"
+                    class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition">Cancel</button>
+                <button id="confirm-delete-btn"
+                    class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition">Delete</button>
+            </div>
+        </div>
+    </div>
+
+
+    <section id="contact" class="bg-white py-12">
+  <div class="container mx-auto px-4 lg:px-8">
+    <h2 class="text-3xl font-semibold mb-6 text-center">Contact Us</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Info Panel -->
+      <div class="space-y-4">
+        <div>
+          <h3 class="text-xl font-medium">Call Us</h3>
+          <p class="text-gray-600">+234-703-070-5058</p>
+        </div>
+        <div>
+          <h3 class="text-xl font-medium">Visit Us</h3>
+          <p class="text-gray-600">2nd transformer, ifesowapo, Celica Ibadan</p>
+        </div>
+        <div>
+          <h3 class="text-xl font-medium">Send Us a Message</h3>
+          <p class="text-gray-600">info@mfmifesowapo.com</p>
+        </div>
+        <div class="flex space-x-4">
+          <!-- Social icons (you can use FontAwesome or inline SVGs) -->
+          <a href="#" class="text-gray-500 hover:text-amber-600">Facebook</a>
+          <a href="#" class="text-gray-500 hover:text-amber-600">Twitter</a>
+          <a href="#" class="text-gray-500 hover:text-amber-600">Instagram</a>
+          <a href="#" class="text-gray-500 hover:text-amber-600">YouTube</a>
+        </div>
+      </div>
+
+      <!-- Contact Form -->
+      <div>
+        <form id="contact-form" class="space-y-4 bg-gray-50 p-6 rounded-lg shadow">
+          <div>
+            <label for="contact-name" class="block text-sm font-medium text-gray-700">Your Name</label>
+            <input type="text" id="contact-name" name="name" required class="w-full border border-gray-300 p-2 rounded-md" />
+          </div>
+          <div>
+            <label for="contact-email" class="block text-sm font-medium text-gray-700">Your Email</label>
+            <input type="email" id="contact-email" name="email" required class="w-full border border-gray-300 p-2 rounded-md" />
+          </div>
+          <div>
+            <label for="contact-subject" class="block text-sm font-medium text-gray-700">Subject</label>
+            <input type="text" id="contact-subject" name="subject" required class="w-full border border-gray-300 p-2 rounded-md" />
+          </div>
+          <div>
+            <label for="contact-message" class="block text-sm font-medium text-gray-700">Message</label>
+            <textarea id="contact-message" name="message" rows="4" required class="w-full border border-gray-300 p-2 rounded-md"></textarea>
+          </div>
+          <div class="text-right">
+            <button type="submit" class="bg-amber-600 text-white px-6 py-2 rounded-lg hover:bg-amber-700 transition">
+              Send Message
+            </button>
+          </div>
+        </form>
+        <p id="contact-feedback" class="mt-2 text-sm text-green-500 hidden">Your message has been sent. Thank you!</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+    <script src="church.js"></script>
+
+</body>
+
+</html>

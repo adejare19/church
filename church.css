@@ -1,0 +1,83 @@
+ body {
+     font-family: 'Montserrat', sans-serif;
+ }
+
+ h1,
+ h2,
+ h3 {
+     font-family: 'Merriweather', serif;
+ }
+
+ html,
+ body {
+     height: 100%;
+     margin: 0;
+     display: flex;
+     flex-direction: column;
+ }
+
+ main {
+     flex: 1;
+ }
+
+
+ .active-nav {
+     border-bottom: 2px solid #D97706;
+     /* Amber-600 */
+     color: #D97706;
+ }
+
+ .modal-overlay,
+ .page {
+     transition: opacity 0.3s ease-in-out;
+ }
+
+ .modal-content {
+     transition: transform 0.3s ease-in-out;
+ }
+
+ /* Hide admin controls by default */
+ .admin-controls {
+     display: none;
+ }
+
+ /* Show admin controls when admin is logged in */
+ body.admin-view .admin-controls {
+     display: flex;
+ }
+
+ footer {
+     background: #1f2937;
+     /* gray-800 */
+     color: white;
+     text-align: center;
+     padding: 1rem;
+     margin-top: auto;
+ }
+ #welcome img {
+  border: 8px solid #fff;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+/* Fix stacking issues: keep header/footer on top */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 50; /* ensures navbar is always above everything */
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 50; /* keeps footer above any section images */
+}
+
+/* Lower welcome section image layering */
+#welcome img {
+  position: relative;
+  z-index: 0; /* previously z-10 */
+}
+#welcome div.relative {
+  z-index: 0;
+}
