@@ -4,175 +4,575 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Digital Sanctuary</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <meta name="description" content="MFM Ifesowapo Regional Headquarters - A digital sanctuary where inspiration meets faith">
+    <title>MFM Ifesowapo | Digital Sanctuary</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
     <link rel="stylesheet" href="church.css">
 </head>
-<body class="bg-gray-50 text-gray-800">
-
-    <header class="bg-white shadow-md sticky top-0 z-50">
-        <nav class="container mx-auto px-4 lg:px-8 py-4 flex justify-between items-center">
-            <a href="#home" class="nav-link-logo text-2xl font-bold text-gray-800">
-                <img src="mft.png" height="65px" width="70px" alt="Logo">
+<body>
+    <!-- Header Navigation -->
+    <header class="site-header" id="site-header">
+        <nav class="navbar container">
+            <a href="#home" class="logo" aria-label="MFM Ifesowapo Home">
+                <img src="mft.png" alt="MFM Ifesowapo Logo" width="70" height="65">
             </a>
-            <div class="hidden md:flex items-center space-x-6">
-                <a href="#home" class="nav-link text-gray-600 hover:text-amber-600 transition">Home</a>
-                <a href="#sermons" class="nav-link text-gray-600 hover:text-amber-600 transition">Sermons</a>
-                <a href="#booklets" class="nav-link text-gray-600 hover:text-amber-600 transition">Booklets</a>
-                <a href="#contact" class="nav-link text-gray-600 hover:text-amber-600 transition">Contact</a>
-                <div class="pl-4"> 
-                    <button id="upload-main-btn" class="bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 transition shadow hidden">Upload Content</button>
-                    <button id="logout-btn" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition shadow hidden">Logout</button>
-                </div>
-            </div>
-            <div class="md:hidden">
-                <button id="mobile-menu-btn" class="p-2 rounded-md text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-amber-500">
-                    <svg class="w-6 h-6" id="menu-open-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-                    <svg class="w-6 h-6 hidden" id="menu-close-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            
+            <!-- Desktop Navigation -->
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="#home" class="nav-link active" data-page="home">Home</a></li>
+                <li><a href="#about" class="nav-link" data-page="about">About</a></li>
+                <li><a href="#sermons" class="nav-link" data-page="sermons">Sermons</a></li>
+                <li><a href="#events" class="nav-link" data-page="events">Events</a></li>
+                <li><a href="#booklets" class="nav-link" data-page="booklets">Resources</a></li>
+                <li><a href="#contact" class="nav-link" data-page="contact">Contact</a></li>
+            </ul>
+            
+            <!-- Admin Controls (Desktop) -->
+            <div class="header-actions">
+                <button id="admin-upload-btn" class="btn btn-primary btn-sm admin-only" aria-label="Upload Content">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                        <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
+                    </svg>
+                    Upload
                 </button>
+                <button id="admin-logout-btn" class="btn btn-secondary btn-sm admin-only" aria-label="Logout">Logout</button>
             </div>
+            
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+                <span class="hamburger"></span>
+            </button>
         </nav>
-        <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
-            <div class="px-2 pt-2 pb-3 space-y-1">
-                <a href="#home" class="nav-link-mobile block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-white hover:bg-amber-600">Home</a>
-                <a href="#sermons" class="nav-link-mobile block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-white hover:bg-amber-600">Sermons</a>
-                <a href="#booklets" class="nav-link-mobile block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-white hover:bg-amber-600">Booklets</a>
-                <a href="#contact" class="nav-link-mobile block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-white hover:bg-amber-600">Contact</a>
-            </div>
-            <div class="pt-4 pb-3 border-t border-gray-200 px-5 space-y-2">
-                <button id="upload-main-btn-mobile" class="w-full bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 transition shadow hidden">Upload Content</button>
-                <button id="logout-btn-mobile" class="w-full bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition shadow hidden">Logout</button>
-            </div>
-        </div>
     </header>
 
-    <main id="home" class="page container mx-auto p-4 lg:p-8">
-        <section class="text-center my-12">
-            <h2 class="text-4xl font-bold mb-2">Welcome to Our Digital Home</h2>
-            <p class="text-gray-600 max-w-2xl mx-auto">Stay connected with our church family. Access sermons, view upcoming events, and find resources.</p>
+    <!-- Main Content -->
+    <main class="main-content">
+        
+        <!-- HOME PAGE -->
+        <section id="home" class="page active">
+            
+            <!-- Hero Carousel Section -->
+            <div class="hero-carousel" id="hero-carousel">
+                <div class="carousel-track" id="carousel-track">
+                    <!-- Slide 1 -->
+                    <div class="carousel-slide active">
+                        <div class="slide-image" style="background-image: url('pas.jpeg')"></div>
+                        <div class="slide-overlay"></div>
+                        <div class="slide-content container">
+                            <h1 class="hero-title">Welcome to Our Digital Sanctuary</h1>
+                            <p class="hero-subtitle">A city set on a hill that cannot be hidden</p>
+                            <a href="#sermons" class="btn btn-primary btn-lg">Explore Sermons</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 2 (placeholder - can be added via admin) -->
+                    <div class="carousel-slide">
+                        <div class="slide-image" style="background-image: url('pas.jpeg')"></div>
+                        <div class="slide-overlay"></div>
+                        <div class="slide-content container">
+                            <h1 class="hero-title">Enforcing the Kingdom Through Media</h1>
+                            <p class="hero-subtitle">Join us in spreading the gospel digitally</p>
+                            <a href="#about" class="btn btn-primary btn-lg">Learn More</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 3 -->
+                    <div class="carousel-slide">
+                        <div class="slide-image" style="background-image: url('pas.jpeg')"></div>
+                        <div class="slide-overlay"></div>
+                        <div class="slide-content container">
+                            <h1 class="hero-title">Stay Connected With Our Community</h1>
+                            <p class="hero-subtitle">Access resources, sermons, and upcoming events</p>
+                            <a href="#events" class="btn btn-primary btn-lg">View Events</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Carousel Controls -->
+                <button class="carousel-control prev" id="carousel-prev" aria-label="Previous slide">
+                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                    </svg>
+                </button>
+                <button class="carousel-control next" id="carousel-next" aria-label="Next slide">
+                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                    </svg>
+                </button>
+                
+                <!-- Carousel Indicators -->
+                <div class="carousel-indicators" id="carousel-indicators"></div>
+            </div>
+            
+            <!-- Quick Stats -->
+            <div class="stats-section">
+                <div class="container">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">📖</div>
+                            <div class="stat-number" id="stat-sermons">1</div>
+                            <div class="stat-label">Sermons</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📅</div>
+                            <div class="stat-number" id="stat-events">0</div>
+                            <div class="stat-label">Upcoming Events</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📚</div>
+                            <div class="stat-number" id="stat-booklets">0</div>
+                            <div class="stat-label">Resources</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">🙏</div>
+                            <div class="stat-number">24/7</div>
+                            <div class="stat-label">Prayer Support</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Sermons -->
+            <div class="content-section">
+                <div class="container">
+                    <div class="section-header">
+                        <h2 class="section-title">Recent Sermons</h2>
+                        <a href="#sermons" class="section-link">View All →</a>
+                    </div>
+                    <div class="sermons-grid" id="home-sermons-grid">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Upcoming Events Preview -->
+            <div class="content-section bg-light">
+                <div class="container">
+                    <div class="section-header">
+                        <h2 class="section-title">Upcoming Events</h2>
+                        <a href="#events" class="section-link">View All →</a>
+                    </div>
+                    <div class="events-grid" id="home-events-grid">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+            
         </section>
 
-        <section id="welcome" class="relative py-16 bg-white">
-            <div class="container mx-auto px-4 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div class="relative">
-                    <div class="absolute -top-6 -left-6 w-24 h-24 bg-amber-500 opacity-80"></div>
-                    <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-amber-500 opacity-80"></div>
-                    <img src="pas.jpeg" alt="Pastor Image" class="relative z-10 rounded-lg shadow-lg" />
+        <!-- ABOUT PAGE -->
+        <section id="about" class="page">
+            <div class="page-header">
+                <div class="container">
+                    <h1 class="page-title">About Us</h1>
+                    <p class="page-subtitle">God's Sanctuary. Your Sanctuary. Our Sanctuary.</p>
                 </div>
-                <div>
-                    <p class="text-amber-600 font-medium mb-2">Who we are</p>
-                    <h2 class="text-4xl lg:text-5xl font-bold leading-tight mb-4 text-gray-900">Welcome to <span class="text-amber-600">MFM IFESOWAPO</span></h2>
-                    <p class="text-gray-600 mb-4">This is <strong>God’s Sanctuary</strong>, <strong>Your Sanctuary</strong>, and <strong>Our Sanctuary</strong>.</p>
-                    <p class="text-gray-600 mb-6">We are a City set on a Hill that cannot be hidden — a digital refuge where inspiration meets faith.</p>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="flex items-start space-x-2">
-                            <span class="text-amber-600 text-xl">✔</span>
-                            <div><h4 class="font-semibold text-gray-900">Our Mandate</h4><p class="text-gray-600 text-sm">Enforce the Kingdom through media.</p></div>
+            </div>
+            
+            <div class="content-section">
+                <div class="container">
+                    <div class="about-content">
+                        <div class="about-image">
+                            <div class="image-decoration decoration-tl"></div>
+                            <div class="image-decoration decoration-br"></div>
+                            <img src="pas.jpeg" alt="Pastor - MFM Ifesowapo" loading="lazy">
+                        </div>
+                        <div class="about-text">
+                            <span class="label">Who We Are</span>
+                            <h2>Welcome to <span class="highlight">MFM Ifesowapo</span></h2>
+                            <p>We are a <strong>City set on a Hill</strong> that cannot be hidden — a digital refuge where inspiration meets faith.</p>
+                            <p>At MFM Ifesowapo Regional Headquarters, we believe in the transformative power of the Gospel. Our mission is to reach souls, empower believers, and establish the Kingdom of God through every available medium.</p>
+                            
+                            <div class="mission-grid">
+                                <div class="mission-item">
+                                    <div class="mission-icon">✓</div>
+                                    <div>
+                                        <h4>Our Mandate</h4>
+                                        <p>Enforce the Kingdom through media and digital outreach</p>
+                                    </div>
+                                </div>
+                                <div class="mission-item">
+                                    <div class="mission-icon">✓</div>
+                                    <div>
+                                        <h4>Our Vision</h4>
+                                        <p>To be a beacon of hope and transformation in the digital age</p>
+                                    </div>
+                                </div>
+                                <div class="mission-item">
+                                    <div class="mission-icon">✓</div>
+                                    <div>
+                                        <h4>Our Values</h4>
+                                        <p>Faith, Excellence, Integrity, and Service to humanity</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Service Times -->
+            <div class="content-section bg-light">
+                <div class="container">
+                    <h2 class="section-title text-center">Service Times</h2>
+                    <div class="service-times">
+                        <div class="service-card">
+                            <h3>Sunday Service</h3>
+                            <p class="time">8:00 AM - 11:00 AM</p>
+                            <p class="description">Main worship service with inspiring messages</p>
+                        </div>
+                        <div class="service-card">
+                            <h3>Mid-Week Service</h3>
+                            <p class="time">Wednesday 6:00 PM</p>
+                            <p class="description">Prayer and Bible study</p>
+                        </div>
+                        <div class="service-card">
+                            <h3>Friday Vigil</h3>
+                            <p class="time">Friday 11:00 PM</p>
+                            <p class="description">All-night prayer session</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="recent-sermons" class="mb-16 mt-4">
-            <h3 class="text-3xl font-bold border-l-4 border-amber-600 pl-4 mb-8">Recent Sermons</h3>
-            <div id="recent-sermons-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
-            <div class="text-center mt-8">
-                <a href="#sermons" class="bg-amber-600 text-white px-6 py-3 rounded-lg hover:bg-amber-700 transition shadow-md">View All Sermons</a>
+        <!-- SERMONS PAGE -->
+        <section id="sermons" class="page">
+            <div class="page-header">
+                <div class="container">
+                    <h1 class="page-title">Sermon Archives</h1>
+                    <p class="page-subtitle">Listen to life-transforming messages</p>
+                </div>
             </div>
-        </section>
-
-        <section id="flyers" class="mb-16">
-            <h3 class="text-3xl font-bold border-l-4 border-amber-600 pl-4 mb-8">Upcoming Events</h3>
-            <div id="flyers-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
-        </section>
-
-        <section id="activities" class="mb-16">
-            <h3 class="text-3xl font-bold border-l-4 border-amber-600 pl-4 mb-8">Church Activities</h3>
-            <div id="activities-list" class="bg-white rounded-lg shadow-lg p-6"></div>
-        </section>
-    </main>
-
-    <main id="sermons" class="page container mx-auto p-4 lg:p-8 hidden">
-        <h3 class="text-3xl font-bold border-l-4 border-amber-600 pl-4 mb-8">Sermon Archives</h3>
-        <div id="sermons-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
-    </main>
-
-    <main id="booklets" class="page container mx-auto p-4 lg:p-8 hidden">
-        <h3 class="text-3xl font-bold border-l-4 border-amber-600 pl-4 mb-8">Prayer Booklets Library</h3>
-        <div id="booklets-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
-    </main>
-
-    <main id="sermon-player" class="page container mx-auto p-4 lg:p-8 hidden">
-        <section class="max-w-4xl mx-auto">
-            <a href="#sermons" class="text-amber-600 hover:text-amber-800 font-semibold mb-8 inline-block">&larr; Back to Archives</a>
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <div id="media-player-container" class="w-full bg-black aspect-video flex items-center justify-center"></div>
-                <div class="p-6">
-                    <p id="player-date" class="text-sm text-gray-500 mb-1">Date</p>
-                    <h3 id="player-title" class="text-3xl font-bold mb-4">Sermon Title</h3>
-                    <p id="player-description" class="text-gray-600">Description.</p>
+            
+            <div class="content-section">
+                <div class="container">
+                    <!-- Search & Filter -->
+                    <div class="content-controls">
+                        <div class="search-box">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                            </svg>
+                            <input type="text" id="sermon-search" placeholder="Search sermons..." aria-label="Search sermons">
+                        </div>
+                    </div>
+                    
+                    <!-- Sermons Grid -->
+                    <div class="sermons-grid" id="sermons-grid">
+                        <!-- Populated by JS -->
+                    </div>
+                    
+                    <!-- Empty State -->
+                    <div class="empty-state hidden" id="sermons-empty">
+                        <div class="empty-icon">📖</div>
+                        <h3>No Sermons Found</h3>
+                        <p>Check back soon for inspiring messages</p>
+                    </div>
                 </div>
             </div>
         </section>
+
+        <!-- EVENTS PAGE -->
+        <section id="events" class="page">
+            <div class="page-header">
+                <div class="container">
+                    <h1 class="page-title">Events & Activities</h1>
+                    <p class="page-subtitle">Stay connected with our community</p>
+                </div>
+            </div>
+            
+            <div class="content-section">
+                <div class="container">
+                    <div class="events-grid" id="events-grid">
+                        <!-- Populated by JS -->
+                    </div>
+                    
+                    <!-- Empty State -->
+                    <div class="empty-state hidden" id="events-empty">
+                        <div class="empty-icon">📅</div>
+                        <h3>No Upcoming Events</h3>
+                        <p>Check back soon for new activities and programs</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BOOKLETS PAGE -->
+        <section id="booklets" class="page">
+            <div class="page-header">
+                <div class="container">
+                    <h1 class="page-title">Prayer Resources</h1>
+                    <p class="page-subtitle">Download prayer booklets and study materials</p>
+                </div>
+            </div>
+            
+            <div class="content-section">
+                <div class="container">
+                    <div class="booklets-grid" id="booklets-grid">
+                        <!-- Populated by JS -->
+                    </div>
+                    
+                    <!-- Empty State -->
+                    <div class="empty-state hidden" id="booklets-empty">
+                        <div class="empty-icon">📚</div>
+                        <h3>No Resources Available</h3>
+                        <p>Check back soon for prayer booklets and study materials</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT PAGE -->
+        <section id="contact" class="page">
+            <div class="page-header">
+                <div class="container">
+                    <h1 class="page-title">Get In Touch</h1>
+                    <p class="page-subtitle">We'd love to hear from you</p>
+                </div>
+            </div>
+            
+            <div class="content-section">
+                <div class="container">
+                    <div class="contact-grid">
+                        <!-- Contact Form -->
+                        <div class="contact-form-wrapper">
+                            <h2>Send Us a Message</h2>
+                            <form class="contact-form" id="contact-form">
+                                <div class="form-group">
+                                    <label for="contact-name">Full Name *</label>
+                                    <input type="text" id="contact-name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="contact-email">Email Address *</label>
+                                    <input type="email" id="contact-email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="contact-subject">Subject *</label>
+                                    <input type="text" id="contact-subject" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="contact-message">Message *</label>
+                                    <textarea id="contact-message" rows="5" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-lg">Send Message</button>
+                            </form>
+                        </div>
+                        
+                        <!-- Contact Info -->
+                        <div class="contact-info">
+                            <h2>Contact Information</h2>
+                            
+                            <div class="info-item">
+                                <div class="info-icon">📍</div>
+                                <div>
+                                    <h4>Address</h4>
+                                    <p>MFM Ifesowapo Regional Headquarters<br>Ibadan, Oyo State, Nigeria</p>
+                                </div>
+                            </div>
+                            
+                            <div class="info-item">
+                                <div class="info-icon">📞</div>
+                                <div>
+                                    <h4>Phone</h4>
+                                    <p>+234 XXX XXX XXXX</p>
+                                </div>
+                            </div>
+                            
+                            <div class="info-item">
+                                <div class="info-icon">✉️</div>
+                                <div>
+                                    <h4>Email</h4>
+                                    <p>info@mfmifesowapo.org</p>
+                                </div>
+                            </div>
+                            
+                            <div class="info-item">
+                                <div class="info-icon">🕐</div>
+                                <div>
+                                    <h4>Office Hours</h4>
+                                    <p>Monday - Friday: 9:00 AM - 5:00 PM<br>Saturday: 10:00 AM - 2:00 PM</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Social Links -->
+                            <div class="social-links">
+                                <h4>Follow Us</h4>
+                                <div class="social-icons">
+                                    <a href="#" aria-label="Facebook" class="social-icon">
+                                        <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                            <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z"/>
+                                        </svg>
+                                    </a>
+                                    <a href="#" aria-label="YouTube" class="social-icon">
+                                        <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                            <path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.007 2.007 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.007 2.007 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31.4 31.4 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.007 2.007 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A99.788 99.788 0 0 1 7.858 2h.193zM6.4 5.209v4.818l4.157-2.408L6.4 5.209z"/>
+                                        </svg>
+                                    </a>
+                                    <a href="#" aria-label="Instagram" class="social-icon">
+                                        <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                            <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334z"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SERMON PLAYER PAGE -->
+        <section id="sermon-player" class="page">
+            <div class="container">
+                <div class="player-wrapper">
+                    <a href="#sermons" class="back-link">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+                        </svg>
+                        Back to Sermons
+                    </a>
+                    
+                    <div class="player-card">
+                        <div class="player-media" id="player-media">
+                            <!-- Video/Audio player populated by JS -->
+                        </div>
+                        <div class="player-info">
+                            <p class="player-date" id="player-date">Date</p>
+                            <h1 class="player-title" id="player-title">Sermon Title</h1>
+                            <p class="player-description" id="player-description">Description</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
-    <footer class="bg-gray-800 text-white text-center p-4 fixed bottom-0 left-0 w-full">
-        <p>&copy; 2025 MFM Ifesowapo Regional HeadQuarters.</p>
-        <a href="#" id="admin-login-link" class="text-sm text-gray-400 hover:text-amber-500">Admin Login</a>
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>MFM Ifesowapo</h3>
+                    <p>A digital sanctuary where inspiration meets faith. Enforcing the Kingdom through media.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#sermons">Sermons</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Resources</h4>
+                    <ul class="footer-links">
+                        <li><a href="#booklets">Prayer Booklets</a></li>
+                        <li><a href="#events">Events</a></li>
+                        <li><a href="#contact">Get Involved</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Connect</h4>
+                    <p>Stay updated with our latest content</p>
+                    <div class="social-icons">
+                        <a href="#" aria-label="Facebook" class="social-icon">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z"/>
+                            </svg>
+                        </a>
+                        <a href="#" aria-label="YouTube" class="social-icon">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.007 2.007 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.007 2.007 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31.4 31.4 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.007 2.007 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A99.788 99.788 0 0 1 7.858 2h.193zM6.4 5.209v4.818l4.157-2.408L6.4 5.209z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 MFM Ifesowapo Regional Headquarters. All rights reserved.</p>
+                <a href="#" id="admin-login-link" class="admin-link">Admin Access</a>
+            </div>
+        </div>
     </footer>
 
-    <div id="admin-login-modal" class="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden">
-        <div class="modal-content bg-white w-full max-w-sm p-8 rounded-lg shadow-xl">
-            <h3 class="text-2xl font-bold mb-6">Admin Login</h3>
-            <form id="admin-login-form">
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                    <input type="password" id="admin-password" required class="w-full p-2 border rounded-md">
-                    <p id="login-error" class="text-red-500 text-sm mt-1 hidden">Incorrect password.</p>
+    <!-- Admin Login Modal -->
+    <div class="modal" id="admin-modal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Admin Login</h3>
+                <button class="modal-close" id="modal-close-admin" aria-label="Close modal">&times;</button>
+            </div>
+            <form id="admin-login-form" class="modal-form">
+                <div class="form-group">
+                    <label for="admin-password">Password</label>
+                    <input type="password" id="admin-password" required autocomplete="current-password">
                 </div>
-                <div class="flex justify-end space-x-4">
-                    <button type="button" id="cancel-login-btn" class="bg-gray-200 px-4 py-2 rounded-lg">Cancel</button>
-                    <button type="submit" class="bg-amber-600 text-white px-4 py-2 rounded-lg">Login</button>
+                <p class="error-message hidden" id="login-error">Incorrect password. Please try again.</p>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="cancel-login">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Login</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <div id="upload-modal" class="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden">
-        <div class="modal-content bg-white w-full max-w-md p-8 rounded-lg shadow-xl">
-            <h3 id="modal-title" class="text-2xl font-bold mb-6">Upload New Content</h3>
-            <form id="upload-form">
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Content Type</label>
-                    <select id="content-type" class="w-full p-2 border rounded-md">
+    <!-- Upload Content Modal -->
+    <div class="modal" id="upload-modal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3 id="upload-modal-title">Upload New Content</h3>
+                <button class="modal-close" id="modal-close-upload" aria-label="Close modal">&times;</button>
+            </div>
+            <form id="upload-form" class="modal-form">
+                <div class="form-group">
+                    <label for="content-type">Content Type</label>
+                    <select id="content-type" required>
                         <option value="sermon">Sermon</option>
-                        <option value="flyer">Flyer</option>
+                        <option value="event">Event/Flyer</option>
                         <option value="booklet">Prayer Booklet</option>
                         <option value="activity">Activity</option>
                     </select>
                 </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Title</label>
-                    <input type="text" id="content-title" required class="w-full p-2 border rounded-md">
+                <div class="form-group">
+                    <label for="content-title">Title</label>
+                    <input type="text" id="content-title" required>
                 </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                    <textarea id="content-description" rows="3" required class="w-full p-2 border rounded-md"></textarea>
+                <div class="form-group">
+                    <label for="content-description">Description</label>
+                    <textarea id="content-description" rows="4" required></textarea>
                 </div>
-                <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Files (Hold Ctrl/Cmd to select many)</label>
-                    <input type="file" id="content-file" name="content-file[]" multiple class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100">
+                <div class="form-group">
+                    <label for="content-file">File(s) <span class="text-muted">(Ctrl/Cmd + Click for multiple)</span></label>
+                    <input type="file" id="content-file" multiple accept="image/*,video/*,audio/*,.pdf">
+                    <p class="form-help">Supported: Images, Videos, Audio, PDFs</p>
                 </div>
-                <div class="flex justify-end space-x-4">
-                    <button type="button" id="cancel-upload-btn" class="bg-gray-200 px-4 py-2 rounded-lg">Cancel</button>
-                    <button type="submit" id="submit-upload-btn" class="bg-amber-600 text-white px-4 py-2 rounded-lg">Upload</button>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="cancel-upload">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Upload</button>
                 </div>
             </form>
         </div>
     </div>
 
+    <!-- Success Toast -->
+    <div class="toast hidden" id="toast">
+        <div class="toast-content">
+            <span id="toast-message">Success!</span>
+        </div>
+    </div>
+
+    <!-- Scripts -->
     <script src="church.js"></script>
 </body>
 </html>
