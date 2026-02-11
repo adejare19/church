@@ -263,10 +263,16 @@ function setupEventListeners() {
         loginForm.addEventListener('submit', handleAdminLogin);
     }
     
-    // Admin logout
+    // Admin logout (desktop)
     const logoutBtn = document.getElementById('admin-logout-btn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', handleAdminLogout);
+    }
+    
+    // Admin logout (mobile)
+    const logoutBtnMobile = document.getElementById('admin-logout-btn-mobile');
+    if (logoutBtnMobile) {
+        logoutBtnMobile.addEventListener('click', handleAdminLogout);
     }
     
     // Admin login link
@@ -278,12 +284,28 @@ function setupEventListeners() {
         });
     }
     
-    // Upload button
+    // Upload button (desktop)
     const uploadBtn = document.getElementById('admin-upload-btn');
     if (uploadBtn) {
         uploadBtn.addEventListener('click', () => {
             resetUploadForm();
             openModal('upload-modal');
+        });
+    }
+    
+    // Upload button (mobile)
+    const uploadBtnMobile = document.getElementById('admin-upload-btn-mobile');
+    if (uploadBtnMobile) {
+        uploadBtnMobile.addEventListener('click', () => {
+            resetUploadForm();
+            openModal('upload-modal');
+            // Close mobile menu after opening modal
+            const mobileToggle = document.getElementById('mobile-toggle');
+            const navMenu = document.getElementById('nav-menu');
+            if (mobileToggle && navMenu) {
+                mobileToggle.classList.remove('active');
+                navMenu.classList.remove('active');
+            }
         });
     }
     
