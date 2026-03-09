@@ -1,7 +1,7 @@
 // ==========================================
 // CONFIG — Set this to your deployed backend
 // ==========================================
-const API_BASE = 'https://your-backend-url.onrender.com/api';
+const API_BASE = 'https://mfm-backend.onrender.com/api';
 // e.g. 'https://mfm-backend.onrender.com/api'
 
 // ==========================================
