@@ -1,8 +1,11 @@
-
+// ==========================================
+// CONFIG — Set this to your deployed backend
 // ==========================================
 const API_BASE = 'https://mfm-backend.onrender.com/api';
-// e.g. 'https://mfm-backend.onrender.com/api'
 
+// ==========================================
+// STATE MANAGEMENT
+// ==========================================
 
 const APP_STATE = {
     sermons: [],
@@ -25,44 +28,65 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function initApp() {
+    // Hide admin buttons immediately before any async calls
+    setAdminUI(false);
     setupEventListeners();
     setupNavigation();
     setupCarousel();
-
-    // Check if admin session still valid (via httpOnly cookie)
     await checkAdminStatus();
-
-    // Load all content from the backend database
     await loadAllContent();
-
     updateStats();
-
-    // Load initial page from hash or default to home
     const initialPage = window.location.hash.substring(1) || 'home';
     navigateToPage(initialPage);
 }
 
 // ==========================================
-// ADMIN AUTHENTICATION (Secure — replaces sessionStorage)
+// ADMIN AUTHENTICATION
 // ==========================================
 
+// Token stored in sessionStorage — cross-origin httpOnly cookies
+// are blocked by browsers (SameSite policy), so we use Bearer token instead.
+
+function getToken() {
+    return sessionStorage.getItem('adminToken');
+}
+
+function setAdminUI(isAdmin) {
+    APP_STATE.isAdmin = isAdmin;
+    document.body.classList.toggle('admin-logged-in', isAdmin);
+
+    // Explicitly control admin button visibility
+    const adminEls = ['admin-upload-btn', 'admin-upload-btn-mobile', 'admin-logout-btn', 'admin-logout-btn-mobile'];
+    adminEls.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = isAdmin ? '' : 'none';
+    });
+
+    // Show/hide login link
+    const loginLink = document.getElementById('admin-login-link');
+    if (loginLink) loginLink.style.display = isAdmin ? 'none' : '';
+
+    // Re-render cards to show/hide edit+delete buttons
+    renderAllContent();
+}
+
 async function checkAdminStatus() {
+    const token = getToken();
+    if (!token) { setAdminUI(false); return; }
+
     try {
         const res = await fetch(`${API_BASE}/auth/verify`, {
             method: 'GET',
-            credentials: 'include', // sends httpOnly cookie
+            headers: { 'Authorization': `Bearer ${token}` },
         });
-
         if (res.ok) {
-            APP_STATE.isAdmin = true;
-            document.body.classList.add('admin-logged-in');
+            setAdminUI(true);
         } else {
-            APP_STATE.isAdmin = false;
-            document.body.classList.remove('admin-logged-in');
+            sessionStorage.removeItem('adminToken');
+            setAdminUI(false);
         }
     } catch (e) {
-        APP_STATE.isAdmin = false;
-        document.body.classList.remove('admin-logged-in');
+        setAdminUI(false);
     }
 }
 
@@ -72,29 +96,30 @@ async function handleAdminLogin(e) {
     const passwordInput = document.getElementById('admin-password');
     const errorEl = document.getElementById('login-error');
     const password = passwordInput.value;
-
-    // Use a fixed admin email or add an email field to the modal
     const email = 'admin@mfmifesowapo.org';
 
     try {
         const res = await fetch(`${API_BASE}/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
             body: JSON.stringify({ email, password }),
         });
 
         const data = await res.json();
 
         if (res.ok && data.success) {
-            APP_STATE.isAdmin = true;
-            document.body.classList.add('admin-logged-in');
+            // Store JWT token in sessionStorage
+            sessionStorage.setItem('adminToken', data.token);
+            setAdminUI(true);
             closeModal('admin-modal');
             showToast('Logged in successfully!');
             document.getElementById('admin-login-form').reset();
             if (errorEl) errorEl.classList.add('hidden');
         } else {
-            if (errorEl) errorEl.classList.remove('hidden');
+            if (errorEl) {
+                errorEl.textContent = data.message || 'Incorrect password.';
+                errorEl.classList.remove('hidden');
+            }
         }
     } catch (err) {
         if (errorEl) {
@@ -105,15 +130,8 @@ async function handleAdminLogin(e) {
 }
 
 async function handleAdminLogout() {
-    try {
-        await fetch(`${API_BASE}/auth/logout`, {
-            method: 'POST',
-            credentials: 'include',
-        });
-    } catch (e) { /* ignore */ }
-
-    APP_STATE.isAdmin = false;
-    document.body.classList.remove('admin-logged-in');
+    sessionStorage.removeItem('adminToken');
+    setAdminUI(false);
     showToast('Logged out successfully');
 }
 
@@ -156,13 +174,11 @@ function setupNavigation() {
     window.addEventListener('scroll', () => {
         const header = document.getElementById('site-header');
         const currentScroll = window.pageYOffset;
-
         if (currentScroll > 100) {
             header.classList.add('scrolled');
         } else {
             header.classList.remove('scrolled');
         }
-
         lastScroll = currentScroll;
     });
 }
@@ -193,7 +209,7 @@ function navigateToPage(pageId, updateHash = true) {
 }
 
 // ==========================================
-// HERO CAROUSEL (unchanged)
+// HERO CAROUSEL
 // ==========================================
 
 function setupCarousel() {
@@ -207,13 +223,17 @@ function setupCarousel() {
     const slides = track.querySelectorAll('.carousel-slide');
     const totalSlides = slides.length;
 
-    slides.forEach((_, index) => {
-        const indicator = document.createElement('button');
-        indicator.className = `indicator ${index === 0 ? 'active' : ''}`;
-        indicator.setAttribute('aria-label', `Go to slide ${index + 1}`);
-        indicator.addEventListener('click', () => goToSlide(index));
-        indicatorsContainer.appendChild(indicator);
-    });
+    if (totalSlides === 0) return;
+
+    if (indicatorsContainer) {
+        slides.forEach((_, index) => {
+            const indicator = document.createElement('button');
+            indicator.className = `indicator ${index === 0 ? 'active' : ''}`;
+            indicator.setAttribute('aria-label', `Go to slide ${index + 1}`);
+            indicator.addEventListener('click', () => goToSlide(index));
+            indicatorsContainer.appendChild(indicator);
+        });
+    }
 
     if (prevBtn) prevBtn.addEventListener('click', () => changeSlide(-1));
     if (nextBtn) nextBtn.addEventListener('click', () => changeSlide(1));
@@ -278,19 +298,13 @@ function stopCarouselAutoPlay() {
 
 function setupEventListeners() {
     const loginForm = document.getElementById('admin-login-form');
-    if (loginForm) {
-        loginForm.addEventListener('submit', handleAdminLogin);
-    }
+    if (loginForm) loginForm.addEventListener('submit', handleAdminLogin);
 
     const logoutBtn = document.getElementById('admin-logout-btn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', handleAdminLogout);
-    }
+    if (logoutBtn) logoutBtn.addEventListener('click', handleAdminLogout);
 
     const logoutBtnMobile = document.getElementById('admin-logout-btn-mobile');
-    if (logoutBtnMobile) {
-        logoutBtnMobile.addEventListener('click', handleAdminLogout);
-    }
+    if (logoutBtnMobile) logoutBtnMobile.addEventListener('click', handleAdminLogout);
 
     const adminLoginLink = document.getElementById('admin-login-link');
     if (adminLoginLink) {
@@ -323,9 +337,7 @@ function setupEventListeners() {
     }
 
     const uploadForm = document.getElementById('upload-form');
-    if (uploadForm) {
-        uploadForm.addEventListener('submit', handleUpload);
-    }
+    if (uploadForm) uploadForm.addEventListener('submit', handleUpload);
 
     document.querySelectorAll('.modal-close').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -338,9 +350,7 @@ function setupEventListeners() {
     document.getElementById('cancel-upload')?.addEventListener('click', () => closeModal('upload-modal'));
 
     const contactForm = document.getElementById('contact-form');
-    if (contactForm) {
-        contactForm.addEventListener('submit', handleContactSubmit);
-    }
+    if (contactForm) contactForm.addEventListener('submit', handleContactSubmit);
 
     const sermonSearch = document.getElementById('sermon-search');
     if (sermonSearch) {
@@ -358,7 +368,7 @@ function setupEventListeners() {
 }
 
 // ==========================================
-// MODAL MANAGEMENT (unchanged)
+// MODAL MANAGEMENT
 // ==========================================
 
 function openModal(modalId) {
@@ -382,27 +392,19 @@ function closeModal(modalId) {
 // ==========================================
 
 async function loadAllContent() {
-    await Promise.all([
-        loadSermons(),
-        loadEvents(),
-        loadResources(),
-    ]);
+    await Promise.all([loadSermons(), loadEvents(), loadResources()]);
 }
 
 async function loadSermons() {
     try {
         const res = await fetch(`${API_BASE}/sermons`);
         const data = await res.json();
-
         if (data.success) {
-            // Map backend fields to the shape the renderer expects
             APP_STATE.sermons = data.data.map(s => ({
                 id: s.id,
                 title: s.title,
                 description: s.description || '',
-                date: new Date(s.sermon_date).toLocaleDateString('en-US', {
-                    month: 'long', day: 'numeric', year: 'numeric'
-                }),
+                date: new Date(s.sermon_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
                 preacher: s.preacher || '',
                 series: s.series || '',
                 mediaUrl: s.files && s.files.length > 0 ? s.files[0].url : null,
@@ -412,7 +414,6 @@ async function loadSermons() {
     } catch (err) {
         console.error('[loadSermons]', err);
     }
-
     renderSermons();
 }
 
@@ -420,15 +421,12 @@ async function loadEvents() {
     try {
         const res = await fetch(`${API_BASE}/events`);
         const data = await res.json();
-
         if (data.success) {
             APP_STATE.events = data.data.map(e => ({
                 id: e.id,
                 title: e.title,
                 description: e.description || '',
-                date: new Date(e.event_date).toLocaleDateString('en-US', {
-                    month: 'long', day: 'numeric', year: 'numeric'
-                }),
+                date: new Date(e.event_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
                 location: e.location || '',
                 time: e.time || '',
                 imageUrl: e.flyer_url || 'https://placehold.co/600x400/d4af37/1a202c?text=Event',
@@ -437,7 +435,6 @@ async function loadEvents() {
     } catch (err) {
         console.error('[loadEvents]', err);
     }
-
     renderEvents();
 }
 
@@ -445,18 +442,14 @@ async function loadResources() {
     try {
         const res = await fetch(`${API_BASE}/resources`);
         const data = await res.json();
-
         if (data.success) {
-            // Split resources into booklets and activities by category
             APP_STATE.booklets = data.data
                 .filter(r => r.category === 'booklet' || r.category === 'general')
                 .map(r => ({
                     id: r.id,
                     title: r.title,
                     description: r.description || '',
-                    date: new Date(r.created_at).toLocaleDateString('en-US', {
-                        month: 'long', day: 'numeric', year: 'numeric'
-                    }),
+                    date: new Date(r.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
                     fileUrl: r.files && r.files.length > 0 ? r.files[0].url : null,
                     fileName: r.files && r.files.length > 0 ? r.files[0].name : null,
                     fileType: r.files && r.files.length > 0 ? r.files[0].type : null,
@@ -468,27 +461,23 @@ async function loadResources() {
                     id: r.id,
                     title: r.title,
                     description: r.description || '',
-                    date: new Date(r.created_at).toLocaleDateString('en-US', {
-                        month: 'long', day: 'numeric', year: 'numeric'
-                    }),
+                    date: new Date(r.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
                     fileUrl: r.files && r.files.length > 0 ? r.files[0].url : null,
                 }));
         }
     } catch (err) {
         console.error('[loadResources]', err);
     }
-
     renderBooklets();
 }
 
 // ==========================================
-// CONTENT UPLOAD (now sends to backend)
+// CONTENT UPLOAD
 // ==========================================
 
 function resetUploadForm() {
     const form = document.getElementById('upload-form');
     if (form) form.reset();
-
     document.getElementById('upload-modal-title').textContent = 'Upload New Content';
     document.getElementById('content-type').disabled = false;
     APP_STATE.editingItem = null;
@@ -501,11 +490,9 @@ async function handleUpload(e) {
     const title = document.getElementById('content-title').value;
     const description = document.getElementById('content-description').value;
     const files = document.getElementById('content-file').files;
-
     const submitBtn = e.target.querySelector('[type="submit"]') || e.target.querySelector('button');
 
     if (APP_STATE.editingItem) {
-        // Edit is local only for now — update in state and re-render
         updateContent(APP_STATE.editingItem.type, APP_STATE.editingItem.id, { title, description, file: files[0] });
         showToast('Content updated successfully!');
         closeModal('upload-modal');
@@ -514,20 +501,20 @@ async function handleUpload(e) {
         return;
     }
 
-    // Map content type to backend endpoint and category
-    const endpointMap = {
-        sermon: 'sermons',
-        event: 'events',
-        booklet: 'resources',
-        activity: 'resources',
-    };
-
+    const endpointMap = { sermon: 'sermons', event: 'events', booklet: 'resources', activity: 'resources' };
     const endpoint = endpointMap[contentType];
     if (!endpoint) return;
+
+    const token = getToken();
+    if (!token) {
+        showToast('You must be logged in to upload.');
+        return;
+    }
 
     if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Uploading...'; }
 
     const filesToUpload = files.length > 0 ? Array.from(files) : [null];
+    let success = false;
 
     for (let i = 0; i < filesToUpload.length; i++) {
         const file = filesToUpload[i];
@@ -536,39 +523,35 @@ async function handleUpload(e) {
         const formData = new FormData();
         formData.append('title', displayTitle);
         formData.append('description', description);
-        formData.append('type', contentType);
 
-        // Add type-specific fields
         if (contentType === 'sermon') {
             formData.append('sermon_date', new Date().toISOString().split('T')[0]);
         } else if (contentType === 'event') {
             formData.append('event_date', new Date().toISOString().split('T')[0]);
         } else {
-            // booklet or activity — set category
             formData.append('category', contentType);
         }
 
-        if (file) {
-            formData.append('files', file);
-        }
+        if (file) formData.append('files', file);
 
         try {
             const res = await fetch(`${API_BASE}/${endpoint}`, {
                 method: 'POST',
-                credentials: 'include',
+                headers: { 'Authorization': `Bearer ${token}` },
                 body: formData,
             });
 
             const data = await res.json();
 
-            if (!res.ok) {
-                if (res.status === 401) {
-                    showToast('Session expired. Please log in again.');
-                    APP_STATE.isAdmin = false;
-                    document.body.classList.remove('admin-logged-in');
-                } else {
-                    showToast(data.message || 'Upload failed.', 'error');
-                }
+            if (res.ok && data.success) {
+                success = true;
+            } else if (res.status === 401) {
+                sessionStorage.removeItem('adminToken');
+                setAdminUI(false);
+                showToast('Session expired. Please log in again.');
+                break;
+            } else {
+                showToast(data.message || 'Upload failed.');
                 break;
             }
         } catch (err) {
@@ -579,12 +562,12 @@ async function handleUpload(e) {
 
     if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Upload'; }
 
-    showToast(`${filesToUpload.length} item(s) uploaded successfully!`);
-    closeModal('upload-modal');
-
-    // Refresh content from server
-    await loadAllContent();
-    updateStats();
+    if (success) {
+        showToast(`${filesToUpload.length} item(s) uploaded successfully!`);
+        closeModal('upload-modal');
+        await loadAllContent();
+        updateStats();
+    }
 }
 
 function updateContent(type, id, data) {
@@ -596,22 +579,15 @@ function updateContent(type, id, data) {
         case 'activity': collection = APP_STATE.activities; break;
         default: return;
     }
-
     const item = collection.find(i => i.id === id);
     if (item) {
         item.title = data.title;
         item.description = data.description;
-
         if (data.file) {
             const fileUrl = URL.createObjectURL(data.file);
-            if (type === 'sermon') {
-                item.mediaUrl = fileUrl;
-                item.mediaType = data.file.type;
-            } else if (type === 'event') {
-                item.imageUrl = fileUrl;
-            } else {
-                item.fileUrl = fileUrl;
-            }
+            if (type === 'sermon') { item.mediaUrl = fileUrl; item.mediaType = data.file.type; }
+            else if (type === 'event') { item.imageUrl = fileUrl; }
+            else { item.fileUrl = fileUrl; }
         }
     }
 }
@@ -619,23 +595,18 @@ function updateContent(type, id, data) {
 async function deleteContent(type, id) {
     if (!confirm('Are you sure you want to delete this item?')) return;
 
-    const endpointMap = {
-        sermon: 'sermons',
-        event: 'events',
-        booklet: 'resources',
-        activity: 'resources',
-    };
+    const token = getToken();
+    if (!token) { showToast('You must be logged in to delete.'); return; }
 
+    const endpointMap = { sermon: 'sermons', event: 'events', booklet: 'resources', activity: 'resources' };
     const endpoint = endpointMap[type];
 
     try {
         const res = await fetch(`${API_BASE}/${endpoint}/${id}`, {
             method: 'DELETE',
-            credentials: 'include',
+            headers: { 'Authorization': `Bearer ${token}` },
         });
-
         const data = await res.json();
-
         if (res.ok && data.success) {
             showToast('Content deleted successfully');
             await loadAllContent();
@@ -657,22 +628,19 @@ function editContent(type, id) {
         case 'activity': item = APP_STATE.activities.find(a => a.id === id); break;
         default: return;
     }
-
     if (!item) return;
 
     APP_STATE.editingItem = { type, id };
-
     document.getElementById('upload-modal-title').textContent = 'Edit Content';
     document.getElementById('content-type').value = type;
     document.getElementById('content-type').disabled = true;
     document.getElementById('content-title').value = item.title;
     document.getElementById('content-description').value = item.description;
-
     openModal('upload-modal');
 }
 
 // ==========================================
-// RENDERING (unchanged from original)
+// RENDERING
 // ==========================================
 
 function renderAllContent() {
@@ -821,10 +789,8 @@ function createBookletCard(booklet) {
     const card = document.createElement('div');
     card.className = 'booklet-card';
 
-    const imageUrl = 'https://placehold.co/600x400/d4af37/1a202c?text=Booklet';
-
     card.innerHTML = `
-        <div class="card-image" style="background-image: url('${imageUrl}')">
+        <div class="card-image" style="background-image: url('https://placehold.co/600x400/d4af37/1a202c?text=Booklet')">
             <div class="card-badge">PDF</div>
         </div>
         <div class="card-content">
@@ -843,7 +809,7 @@ function createBookletCard(booklet) {
 }
 
 // ==========================================
-// SERMON PLAYER (unchanged)
+// SERMON PLAYER
 // ==========================================
 
 function playSermon(id) {
@@ -860,27 +826,23 @@ function playSermon(id) {
             playerMedia.innerHTML = `<video src="${sermon.mediaUrl}" controls class="w-full h-full"></video>`;
         } else if (sermon.mediaType.startsWith('audio')) {
             playerMedia.innerHTML = `
-                <div style="display: flex; align-items: center; justify-content: center; height: 100%; flex-direction: column; gap: 1rem;">
-                    <svg width="80" height="80" fill="currentColor" viewBox="0 0 16 16" style="color: #d4af37;">
+                <div style="display:flex;align-items:center;justify-content:center;height:100%;flex-direction:column;gap:1rem;">
+                    <svg width="80" height="80" fill="currentColor" viewBox="0 0 16 16" style="color:#d4af37;">
                         <path d="M8 3a5 5 0 0 0-5 5v1h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V8a6 6 0 1 1 12 0v5a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1V8a5 5 0 0 0-5-5z"/>
                     </svg>
-                    <audio src="${sermon.mediaUrl}" controls style="width: 80%; max-width: 500px;"></audio>
+                    <audio src="${sermon.mediaUrl}" controls style="width:80%;max-width:500px;"></audio>
                 </div>
             `;
         }
     } else {
-        playerMedia.innerHTML = `
-            <div style="color: rgba(255,255,255,0.7); text-align: center;">
-                <p>No media available for this sermon.</p>
-            </div>
-        `;
+        playerMedia.innerHTML = `<div style="color:rgba(255,255,255,0.7);text-align:center;"><p>No media available for this sermon.</p></div>`;
     }
 
     navigateToPage('sermon-player');
 }
 
 // ==========================================
-// SEARCH & FILTER (unchanged)
+// SEARCH & FILTER
 // ==========================================
 
 function filterSermons(query) {
@@ -925,7 +887,7 @@ function updateStats() {
 }
 
 // ==========================================
-// CONTACT FORM (now sends to backend)
+// CONTACT FORM
 // ==========================================
 
 async function handleContactSubmit(e) {
@@ -962,25 +924,20 @@ async function handleContactSubmit(e) {
 }
 
 // ==========================================
-// TOAST NOTIFICATIONS (unchanged)
+// TOAST NOTIFICATIONS
 // ==========================================
 
 function showToast(message, duration = 3000) {
     const toast = document.getElementById('toast');
     const toastMessage = document.getElementById('toast-message');
-
     if (!toast || !toastMessage) return;
-
     toastMessage.textContent = message;
     toast.classList.remove('hidden');
-
-    setTimeout(() => {
-        toast.classList.add('hidden');
-    }, duration);
+    setTimeout(() => { toast.classList.add('hidden'); }, duration);
 }
 
 // ==========================================
-// UTILITY FUNCTIONS (unchanged)
+// UTILITY FUNCTIONS
 // ==========================================
 
 function escapeHtml(unsafe) {
@@ -993,6 +950,5 @@ function escapeHtml(unsafe) {
         .replace(/'/g, "&#039;");
 }
 
-// Make functions globally accessible for inline onclick handlers
 window.editContent = editContent;
 window.deleteContent = deleteContent;
