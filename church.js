@@ -1,12 +1,8 @@
-// ==========================================
-// CONFIG — Set this to your deployed backend
+
 // ==========================================
 const API_BASE = 'https://mfm-backend.onrender.com/api';
 // e.g. 'https://mfm-backend.onrender.com/api'
 
-// ==========================================
-// STATE MANAGEMENT
-// ==========================================
 
 const APP_STATE = {
     sermons: [],
@@ -233,8 +229,10 @@ function setupCarousel() {
 
 function changeSlide(direction) {
     const track = document.getElementById('carousel-track');
+    if (!track) return;
     const slides = track.querySelectorAll('.carousel-slide');
     const totalSlides = slides.length;
+    if (totalSlides === 0) return;
 
     APP_STATE.carouselIndex = (APP_STATE.carouselIndex + direction + totalSlides) % totalSlides;
     goToSlide(APP_STATE.carouselIndex);
@@ -242,6 +240,7 @@ function changeSlide(direction) {
 
 function goToSlide(index) {
     const track = document.getElementById('carousel-track');
+    if (!track) return;
     const slides = track.querySelectorAll('.carousel-slide');
     const indicators = document.querySelectorAll('.indicator');
 
