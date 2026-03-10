@@ -44,11 +44,11 @@ async function initApp() {
 // ADMIN AUTHENTICATION
 // ==========================================
 
-// Token stored in sessionStorage — cross-origin httpOnly cookies
+// Token stored in localStorage — persists across page reloads
 // are blocked by browsers (SameSite policy), so we use Bearer token instead.
 
 function getToken() {
-    return sessionStorage.getItem('adminToken');
+    return localStorage.getItem('adminToken');
 }
 
 function setAdminUI(isAdmin) {
@@ -82,7 +82,7 @@ async function checkAdminStatus() {
         if (res.ok) {
             setAdminUI(true);
         } else {
-            sessionStorage.removeItem('adminToken');
+            localStorage.removeItem('adminToken');
             setAdminUI(false);
         }
     } catch (e) {
@@ -108,8 +108,8 @@ async function handleAdminLogin(e) {
         const data = await res.json();
 
         if (res.ok && data.success) {
-            // Store JWT token in sessionStorage
-            sessionStorage.setItem('adminToken', data.token);
+            // Store JWT token in localStorage
+            localStorage.setItem('adminToken', data.token);
             setAdminUI(true);
             closeModal('admin-modal');
             showToast('Logged in successfully!');
@@ -130,7 +130,7 @@ async function handleAdminLogin(e) {
 }
 
 async function handleAdminLogout() {
-    sessionStorage.removeItem('adminToken');
+    localStorage.removeItem('adminToken');
     setAdminUI(false);
     showToast('Logged out successfully');
 }
@@ -535,6 +535,7 @@ async function handleUpload(e) {
         if (file) formData.append('files', file);
 
         try {
+            console.log('[Upload] Sending to:', `${API_BASE}/${endpoint}`, '| Token exists:', !!token);
             const res = await fetch(`${API_BASE}/${endpoint}`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` },
@@ -546,12 +547,13 @@ async function handleUpload(e) {
             if (res.ok && data.success) {
                 success = true;
             } else if (res.status === 401) {
-                sessionStorage.removeItem('adminToken');
+                localStorage.removeItem('adminToken');
                 setAdminUI(false);
                 showToast('Session expired. Please log in again.');
                 break;
             } else {
-                showToast(data.message || 'Upload failed.');
+                console.error('[Upload] Server error:', res.status, data);
+                showToast(data.message || `Upload failed (${res.status}). Check browser console for details.`);
                 break;
             }
         } catch (err) {
