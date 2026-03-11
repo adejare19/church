@@ -4,6 +4,35 @@
 const API_BASE = 'https://mfm-backend.onrender.com/api';
 
 // ==========================================
+// SERVER WAKE-UP UTILITY
+// ==========================================
+
+// Pings the server every 13 minutes to prevent Render free tier sleep
+function keepServerAwake() {
+    setInterval(async () => {
+        try {
+            await fetch(`${API_BASE.replace('/api', '')}/wake`);
+        } catch (e) { /* silent */ }
+    }, 13 * 60 * 1000);
+}
+
+// Wakes the server and waits until it responds (max 90 seconds)
+async function wakeServer() {
+    const MAX_WAIT = 90000;
+    const INTERVAL = 3000;
+    const start = Date.now();
+
+    while (Date.now() - start < MAX_WAIT) {
+        try {
+            const res = await fetch(`${API_BASE.replace('/api', '')}/health`);
+            if (res.ok) return true;
+        } catch (e) { /* still sleeping */ }
+        await new Promise(r => setTimeout(r, INTERVAL));
+    }
+    return false;
+}
+
+// ==========================================
 // STATE MANAGEMENT
 // ==========================================
 
@@ -33,9 +62,17 @@ async function initApp() {
     setupEventListeners();
     setupNavigation();
     setupCarousel();
+
+    // Wake the backend before making any API calls
+    await wakeServer();
+
     await checkAdminStatus();
     await loadAllContent();
     updateStats();
+
+    // Keep server alive while user is on the page
+    keepServerAwake();
+
     const initialPage = window.location.hash.substring(1) || 'home';
     navigateToPage(initialPage);
 }
@@ -95,8 +132,13 @@ async function handleAdminLogin(e) {
 
     const passwordInput = document.getElementById('admin-password');
     const errorEl = document.getElementById('login-error');
+    const submitBtn = document.querySelector('#admin-modal button[type="submit"]')
+                   || document.querySelector('#admin-login-form button');
     const password = passwordInput.value;
     const email = 'admin@mfmifesowapo.org';
+
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Logging in...'; }
+    if (errorEl) errorEl.classList.add('hidden');
 
     try {
         const res = await fetch(`${API_BASE}/auth/login`, {
@@ -105,11 +147,18 @@ async function handleAdminLogin(e) {
             body: JSON.stringify({ email, password }),
         });
 
+        console.log('[Auth] Login response status:', res.status);
         const data = await res.json();
+        console.log('[Auth] Login response data:', JSON.stringify(data));
 
         if (res.ok && data.success) {
-            // Store JWT token in localStorage
+            if (!data.token) {
+                console.error('[Auth] Login succeeded but no token in response!', data);
+                if (errorEl) { errorEl.textContent = 'Server error: no token returned.'; errorEl.classList.remove('hidden'); }
+                return;
+            }
             localStorage.setItem('adminToken', data.token);
+            console.log('[Auth] Token stored. Verify storage:', !!localStorage.getItem('adminToken'));
             setAdminUI(true);
             closeModal('admin-modal');
             showToast('Logged in successfully!');
@@ -122,10 +171,13 @@ async function handleAdminLogin(e) {
             }
         }
     } catch (err) {
+        console.error('[Auth] Login fetch error:', err);
         if (errorEl) {
-            errorEl.textContent = 'Unable to connect. Please try again.';
+            errorEl.textContent = 'Unable to connect. Server may be starting up — try again in 10 seconds.';
             errorEl.classList.remove('hidden');
         }
+    } finally {
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Login'; }
     }
 }
 
